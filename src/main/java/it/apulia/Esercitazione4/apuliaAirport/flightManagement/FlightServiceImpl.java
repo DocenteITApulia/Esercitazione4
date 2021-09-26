@@ -1,5 +1,9 @@
 package it.apulia.Esercitazione4.apuliaAirport.flightManagement;
 
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.BookingRepository;
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.PassengerRepository;
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Passeggero;
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Prenotazione;
 import it.apulia.Esercitazione4.apuliaAirport.errors.MyNotFoundException;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Tabellone;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Volo;
@@ -10,15 +14,21 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class FlightServiceImpl implements FlightService{
     private final FlightRepository flightRepository;
+    private final BookingRepository bookingRepository;
+    private final PassengerRepository passengerRepository;
 
     @Autowired
-    public FlightServiceImpl(FlightRepository flightRepository){
+    public FlightServiceImpl(FlightRepository flightRepository, BookingRepository bookingRepository,
+                             PassengerRepository passengerRepository){
         this.flightRepository = flightRepository;
+        this.bookingRepository = bookingRepository;
+        this.passengerRepository = passengerRepository;
     }
 
     //TODO add checks
@@ -78,5 +88,15 @@ public class FlightServiceImpl implements FlightService{
         templist.forEach(volo -> System.out.println(volo.toString()));
         Tabellone tabellone = new Tabellone(templist);
         return tabellone;
+    }
+
+    @Override
+    public List<Passeggero> getPassengersFromFlightId(String flightId) {
+        List<Prenotazione> listaPrenotazioni = bookingRepository.findByFlightId(flightId);
+        List<Passeggero> temp = new ArrayList<Passeggero>();
+        listaPrenotazioni.forEach(prenotazione -> {
+            temp.add(passengerRepository.findByNomeAndCognome(prenotazione.getPassName(),prenotazione.getPassLastName()));
+        });
+        return temp;
     }
 }

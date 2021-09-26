@@ -26,6 +26,7 @@ public class Passeggero {
     Integer cap;
     //valutare libphonenumber google
     String phonenumber;
+    String self;
 
     public Passeggero(PasseggeroDTO passeggeroDTO){ //NON salviamo la password nella collezione passengers
         this.nome = passeggeroDTO.getNome();

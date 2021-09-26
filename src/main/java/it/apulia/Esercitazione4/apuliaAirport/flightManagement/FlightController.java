@@ -1,5 +1,6 @@
 package it.apulia.Esercitazione4.apuliaAirport.flightManagement;
 
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Passeggero;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Volo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,11 @@ public class FlightController {
     public ResponseEntity deleteVolo(@PathVariable String flightId){
         flightService.deleteVolo(flightId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{flightId}/listapasseggeri")
+    public ResponseEntity<List<Passeggero>> getListPassengers(@PathVariable String flightId){
+        return ResponseEntity.ok().body(flightService.getPassengersFromFlightId(flightId));
     }
 
     @GetMapping("/searchByDay")

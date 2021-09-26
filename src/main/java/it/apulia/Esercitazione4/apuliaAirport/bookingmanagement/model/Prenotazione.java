@@ -19,11 +19,14 @@ public class Prenotazione {
     @Id
     Integer bookingId;
     String flightId;
+    String airportDep;
+    String airportArr;
     LocalDate depDate;
     LocalTime depTime;
     LocalTime arrTime;
     String passName;
     String passLastName;
+    String selfLink;
     LocalDateTime dataAcquisto;
     List<Luggage> luggageList;
 

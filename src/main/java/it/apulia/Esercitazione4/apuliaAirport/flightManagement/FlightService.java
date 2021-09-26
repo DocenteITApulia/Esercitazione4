@@ -1,5 +1,6 @@
 package it.apulia.Esercitazione4.apuliaAirport.flightManagement;
 
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Passeggero;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Tabellone;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Volo;
 
@@ -16,4 +17,5 @@ public interface FlightService {
     public Tabellone getFlightsInfoDep(String todaydate);
 
     public Tabellone getFlightsInfoArr(String dateArr);
+    List<Passeggero> getPassengersFromFlightId(String flightId);
 }

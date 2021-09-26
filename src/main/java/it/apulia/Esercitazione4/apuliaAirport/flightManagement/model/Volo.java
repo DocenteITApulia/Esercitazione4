@@ -17,7 +17,7 @@ import java.time.LocalTime;
 public class Volo { //più o meno realisticamente avrebbe avuto senso avere una superclasse volo dove erano descritti
     //gli attribbuti fisici, tipo capacità e modello del velivolo (qui non riportato), quindi estendere sull'actualvolo
     @Id
-    String flightId;
+    String flightId; //stiamo supponendo sia univoco, in realtà i codici vengono anche riutilizzati
     @Indexed
     String vettore;//compagnia
     String airportDep;
