@@ -29,7 +29,16 @@ public class Volo { //più o meno realisticamente avrebbe avuto senso avere una 
     LocalTime depTime;
     LocalTime arrTime;
 
-    //public Volo(String flightId, String vettore, String airportDep, String airportArr, Integer capacity,
-    //            LocalDate depDate, Loc)
+    public Volo(String flightId, String vettore, String airportDep, String airportArr, String selfLink, Integer capacity, LocalDate depDate, LocalTime depTime, LocalTime arrTime) {
+        this.flightId = flightId;
+        this.vettore = vettore;
+        this.airportDep = airportDep;
+        this.airportArr = airportArr;
+        this.selfLink = selfLink;
+        this.capacity = capacity;
+        this.depDate = depDate;
+        this.depTime = depTime;
+        this.arrTime = arrTime;
+    }
 }
 

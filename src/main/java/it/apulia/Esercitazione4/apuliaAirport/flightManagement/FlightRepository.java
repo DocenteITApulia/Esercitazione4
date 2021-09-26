@@ -12,5 +12,6 @@ public interface FlightRepository extends MongoRepository<Volo, String> {
 
     List<Volo> findByVettore (String vettore); //ricerca per compagnia
     List<Volo> findByDepDateOrderByDepTime(LocalDate depDate); //TODO verificare funzionamento, creata su suggerimento
+    List<Volo> findByDepDateOrderByArrTime(LocalDate depDate);
     List<Volo> findByDepDateAfterAndDepDateBefore(LocalDate min, LocalDate max); //TODO verificare
 }
