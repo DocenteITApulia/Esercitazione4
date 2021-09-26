@@ -22,6 +22,7 @@ public class Volo { //più o meno realisticamente avrebbe avuto senso avere una 
     String vettore;//compagnia
     String airportDep;
     String airportArr;
+    String selfLink;
     Integer capacity;
     Integer bookedpass = 0;
     LocalDate depDate;
