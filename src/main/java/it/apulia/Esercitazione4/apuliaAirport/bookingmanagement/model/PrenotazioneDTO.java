@@ -1,4 +1,4 @@
-package it.apulia.Esercitazione4.apuliaAirport.flightManagement.model;
+package it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
