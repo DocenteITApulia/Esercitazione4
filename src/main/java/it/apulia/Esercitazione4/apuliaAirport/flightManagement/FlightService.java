@@ -10,6 +10,7 @@ import java.util.List;
 public interface FlightService {
     public Volo addVolo(Volo volo);
     public Volo readVolo(String flightId);
+    public List<Volo> getAllFlights();
     public List<Volo> listAllFlights(String min, String max); //TODO da fare dopo
     public void updateVolo(Volo volo);
     public void deleteVolo(String flightId);

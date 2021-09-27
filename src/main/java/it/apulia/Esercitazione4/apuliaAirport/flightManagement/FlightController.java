@@ -21,6 +21,10 @@ public class FlightController {
         this.flightService = flightService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Volo>> getAllFlights(){
+        return ResponseEntity.ok().body(flightService.getAllFlights());
+    }
 
     @PostMapping
     public ResponseEntity<Volo> addVolo(@RequestBody Volo volo){
@@ -50,9 +54,11 @@ public class FlightController {
         return ResponseEntity.ok().body(flightService.getPassengersFromFlightId(flightId));
     }
 
+
+    /* //finchè non si cambiano le date in stringhe non è possibile utilizzarlo
     @GetMapping("/searchByDay")
     public ResponseEntity<List<Volo>> findVoliByDate(@RequestParam(defaultValue = "01/01/2021") String min,
                                                      @RequestParam(defaultValue = "01/01/2031") String max){
         return ResponseEntity.ok().body(flightService.listAllFlights(min,max));
-    }
+    }*/
 }

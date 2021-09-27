@@ -46,6 +46,11 @@ public class FlightServiceImpl implements FlightService{
         return this.flightRepository.findById(flightId).get();
     }
 
+    @Override
+    public List<Volo> getAllFlights() {
+        return flightRepository.findAll();
+    }
+
     //TODO da testare
     @Override
     public List<Volo> listAllFlights(String min, String max) {
