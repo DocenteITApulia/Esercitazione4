@@ -10,13 +10,16 @@ import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.BookingService;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.PassengerRepository;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Luggage;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Passeggero;
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Prenotazione;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.PrenotazioneDTO;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.FlightRepository;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Volo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,9 +27,10 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UtilService {
     private final FlightRepository flightRepository;
-    private final BookingService bookingService;
+    private final BookingRepository bookingRepository;
     private final UserService userService;
     private final RoleRepository roleRepository;
     private final PassengerRepository passengerRepository;
@@ -34,7 +38,7 @@ public class UtilService {
 
     public void resetAll() {
         flightRepository.deleteAll();
-        bookingService.deleteAll();
+        bookingRepository.deleteAll();
         userService.deleteAll();
         roleRepository.deleteAll();
         passengerRepository.deleteAll();
@@ -52,13 +56,14 @@ public class UtilService {
         userService.saveUtente(new Utente(null, "jim@email.com", "1234", new ArrayList<>()));
         userService.saveUtente(new Utente(null, "arnold", "1234", new ArrayList<>()));
 
-        userService.addRoleToUtente("john", "ROLE_USER");
+        userService.addRoleToUtente("john@email.com", "ROLE_USER");
         //userService.addRoleToUtente("will", "ROLE_MANAGER");
-        userService.addRoleToUtente("jim", "ROLE_ADMIN");
+        userService.addRoleToUtente("jim@email.com", "ROLE_ADMIN");
         userService.addRoleToUtente("arnold", "ROLE_SUPER_ADMIN");
         userService.addRoleToUtente("arnold", "ROLE_ADMIN");
         userService.addRoleToUtente("arnold", "ROLE_USER");
 
+        log.info("Utenti caricati");
         /****PASSEGGERI*****/
         Passeggero passeggero1 = new Passeggero("John","Travolta","john@email.com",
                 LocalDate.of(1954,2,18),"via di Prova, 23","Philadelphia",
@@ -75,6 +80,8 @@ public class UtilService {
         passengerRepository.saveAll(
                 List.of(passeggero1, passeggero2, passeggero3)
         );
+
+        log.info("Passeggeri caricati");
 
         /****VOLI*****/
         String tempdate = "01/10/2021";
@@ -97,23 +104,37 @@ public class UtilService {
                 List.of(flight1,flight2,flight3,flight4,flight5)
         );
 
-        /****Prenotazioni*****/
-        PrenotazioneDTO pren1 = new PrenotazioneDTO("AZ1234","arnold",
-                List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG,Luggage.BAGAGLIO_23KG));
-        PrenotazioneDTO pren2 = new PrenotazioneDTO("AZ1234","john@email.com",
-                List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
-        PrenotazioneDTO pren3 = new PrenotazioneDTO("AZ1234","jim@email.com",
-                List.of());
-        PrenotazioneDTO pren4 = new PrenotazioneDTO("DQ3421","john@email.com",
-                List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
-        PrenotazioneDTO pren5 = new PrenotazioneDTO("TR6754","john@email.com",
-                List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
+        log.info("Voli caricati");
 
-        bookingService.addPrenotazione(pren1);
-        bookingService.addPrenotazione(pren2);
-        bookingService.addPrenotazione(pren3);
-        bookingService.addPrenotazione(pren4);
-        bookingService.addPrenotazione(pren5);
+        /****Prenotazioni*****/
+        Prenotazione pren1 = new Prenotazione(9000,"AZ1234","Bari","Roma",temp,
+                LocalTime.of(6,50),LocalTime.of(7,55),"Arnold","Schwarzenegger",
+                "http://localhost:8080/agencymng/bookings/personal/9000",
+                LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG,Luggage.BAGAGLIO_23KG));
+
+        Prenotazione pren2 = new Prenotazione(9001,"AZ1234","Bari","Roma",temp,
+                LocalTime.of(6,50),LocalTime.of(7,55),"John","Travolta",
+                "http://localhost:8080/agencymng/bookings/personal/9001",
+                LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
+
+        Prenotazione pren3 = new Prenotazione(9002,"AZ1234","Bari","Roma",temp,
+                LocalTime.of(6,50),LocalTime.of(7,55),"Jim","Carrey",
+                "http://localhost:8080/agencymng/bookings/personal/9002",
+                LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC));
+
+        Prenotazione pren4 = new Prenotazione(9003,"DQ3421","Trapani","Roma",temp,
+                LocalTime.of(18,50),LocalTime.of(21,0),"Jim","Carrey",
+                "http://localhost:8080/agencymng/bookings/personal/9003",
+                LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
+
+        Prenotazione pren5 = new Prenotazione(9004,"TR6754","Messina","Treviso",
+                LocalDate.of(2021,6,24),LocalTime.of(18,50),LocalTime.of(22,0),
+                "Jim","Carrey","http://localhost:8080/agencymng/bookings/personal/9004",
+                LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
+
+        bookingRepository.saveAll(List.of(pren1,pren2,pren3,pren4,pren5));
+
+        log.info("Prenotazioni caricate");
 
 
 
