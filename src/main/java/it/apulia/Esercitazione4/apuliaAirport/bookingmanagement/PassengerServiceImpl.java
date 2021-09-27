@@ -51,6 +51,7 @@ public class PassengerServiceImpl implements PassengerService{
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/passengers/"+passeggeroDTO.getEmail()).toUriString());
         temp.setSelf(uri.toString());
+        passengerRepository.save(temp);
         return temp;
     }
 

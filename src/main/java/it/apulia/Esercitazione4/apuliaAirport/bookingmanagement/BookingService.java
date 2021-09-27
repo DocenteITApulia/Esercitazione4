@@ -14,5 +14,7 @@ public interface BookingService {
     Prenotazione addPrenotazione(PrenotazioneDTO prenotazioneDTO);
     Prenotazione updatePrenotazione(Prenotazione prenotazione);
     void deletePrenotazione(Integer bookingId);
+
+    void deleteAll();
     // da fare se c'è tempo, altrimenti basta l'update void addLuggageToPrenotazione(Integer bookingId, String bagaglio);
 }

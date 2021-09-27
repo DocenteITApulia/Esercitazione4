@@ -95,5 +95,8 @@ public class BookingServiceImpl implements BookingService{
         bookingRepository.deleteById(bookingId);
     }
 
-
+    @Override
+    public void deleteAll() {
+        bookingRepository.deleteAll();
+    }
 }
