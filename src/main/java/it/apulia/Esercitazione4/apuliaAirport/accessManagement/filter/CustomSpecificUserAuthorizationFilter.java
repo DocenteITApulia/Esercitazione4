@@ -5,6 +5,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.apulia.Esercitazione4.apuliaAirport.accessManagement.UserService;
+import it.apulia.Esercitazione4.apuliaAirport.accessManagement.model.Role;
+import it.apulia.Esercitazione4.apuliaAirport.accessManagement.model.Utente;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.BookingRepository;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.PassengerRepository;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Passeggero;
@@ -34,11 +37,14 @@ public class CustomSpecificUserAuthorizationFilter implements Filter {
     //TODO eventualmente da rimuovere
     private final PassengerRepository passengerRepository;
     private final BookingRepository bookingRepository;
+    private final UserService userService;
 
     @Autowired
-    public CustomSpecificUserAuthorizationFilter(PassengerRepository passengerRepository, BookingRepository bookingRepository) {
+    public CustomSpecificUserAuthorizationFilter(PassengerRepository passengerRepository,
+                                                 BookingRepository bookingRepository, UserService userService) {
         this.passengerRepository = passengerRepository;
         this.bookingRepository = bookingRepository;
+        this.userService = userService;
     }
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
@@ -48,7 +54,7 @@ public class CustomSpecificUserAuthorizationFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
         String authorizationHeader = req.getHeader(AUTHORIZATION);
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ") ) {
             try {
                 String token = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); //il seed deve essere lo stesso inserito nell'altra classe
@@ -56,15 +62,26 @@ public class CustomSpecificUserAuthorizationFilter implements Filter {
                 DecodedJWT decodedJWT = verifier.verify(token);
                 String username = decodedJWT.getSubject();
                 //https://stackoverflow.com/questions/16910306/substring-a-url-from-the-end
-                String urlrequested = req.getPathInfo();
+                //String urlrequested = req.getPathInfo();
+                String urlrequested = req.getRequestURI();
                 //TODO per adesso check solo per accesso alla prenotazione
                 Integer idPrenotazione = Integer.valueOf(urlrequested.substring(urlrequested.lastIndexOf("/")+1));
                 Passeggero passeggero = passengerRepository.findById(username).get();
                 Prenotazione prenotazione =bookingRepository.findById(idPrenotazione).get();
+                Utente utente = userService.getUtente(username);
+                boolean flag = false;
+                for(Role role:utente.getRoles())
+                {
+                    if(role.getNome().equals("ROLE_ADMIN") || role.getNome().equals("ROLE_SUPER_ADMIN")){
+                        flag = true;
+                        break;
+                    }
+                }
 
                 if(!prenotazione.getPassLastName().equals(passeggero.getCognome()))
                 {
-                    throw new MyAccessDeniedException("Utente non autorizzato");
+                    if(!flag)
+                        throw new MyAccessDeniedException("Utente non autorizzato");
                 }
                 filterChain.doFilter(req, res);
             }catch (Exception exception) {

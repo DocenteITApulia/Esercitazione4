@@ -1,5 +1,6 @@
 package it.apulia.Esercitazione4.apuliaAirport.accessManagement.security;
 
+import it.apulia.Esercitazione4.apuliaAirport.accessManagement.UserService;
 import it.apulia.Esercitazione4.apuliaAirport.accessManagement.filter.CustomAuthenticationFilter;
 import it.apulia.Esercitazione4.apuliaAirport.accessManagement.filter.CustomAuthorizationFilter;
 import it.apulia.Esercitazione4.apuliaAirport.accessManagement.filter.CustomSpecificUserAuthorizationFilter;
@@ -32,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PassengerRepository passengerRepository;
     private final BookingRepository bookingRepository;
+    private final UserService userService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -76,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public FilterRegistrationBean<CustomSpecificUserAuthorizationFilter> authorizationCustomFilter() {
         FilterRegistrationBean<CustomSpecificUserAuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
 
-        registrationBean.setFilter(new CustomSpecificUserAuthorizationFilter(passengerRepository,bookingRepository));
+        registrationBean.setFilter(new CustomSpecificUserAuthorizationFilter(passengerRepository,bookingRepository,userService));
 
         registrationBean.addUrlPatterns("/agencymng/bookings/personal/*");
 
