@@ -1,5 +1,6 @@
 package it.apulia.Esercitazione4.apuliaAirport.bookingmanagement;
 
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Luggage;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Passeggero;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Prenotazione;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.PrenotazioneDTO;
@@ -61,6 +62,9 @@ public class BookingServiceImpl implements BookingService{
     public Prenotazione addPrenotazione(PrenotazioneDTO prenotazioneDTO) {
         if(flightRepository.existsById(prenotazioneDTO.getFlightId()))
         {
+            if(!prenotazioneDTO.getLuggageList().contains(Luggage.BAGAGLIO_BASIC)){
+                prenotazioneDTO.getLuggageList().add(Luggage.BAGAGLIO_BASIC); //se non lo contiene, mettiglielo
+            }
             Volo temp = flightRepository.findById(prenotazioneDTO.getFlightId()).get();
             temp.setBookedpass(temp.getBookedpass()+1); //stiamo considerando 1 prenotazione = 1 passeggero, azione da spostare al buon fine
             //qui si potrebbe inserire un controllo sulla capacità, ma per adesso evitiamo
