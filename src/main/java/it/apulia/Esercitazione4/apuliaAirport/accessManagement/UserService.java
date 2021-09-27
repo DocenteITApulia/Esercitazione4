@@ -12,4 +12,6 @@ public interface UserService {
     Utente getUtente(String username);
     List<Utente> getUtenti();
     void resetAll();
+
+    void deleteAll();
 }

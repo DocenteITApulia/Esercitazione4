@@ -2,7 +2,11 @@ package it.apulia.Esercitazione4.apuliaAirport.accessManagement.security;
 
 import it.apulia.Esercitazione4.apuliaAirport.accessManagement.filter.CustomAuthenticationFilter;
 import it.apulia.Esercitazione4.apuliaAirport.accessManagement.filter.CustomAuthorizationFilter;
+import it.apulia.Esercitazione4.apuliaAirport.accessManagement.filter.CustomSpecificUserAuthorizationFilter;
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.BookingRepository;
+import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.PassengerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PassengerRepository passengerRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,14 +46,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         //http.authorizeRequests().anyRequest().permitAll(); //permette a tutti di accedere
         http.authorizeRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll();
-        http.authorizeRequests().antMatchers(GET, "/api/utenti/**").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(POST, "/api/utenti/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(POST, "/libreria/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(PUT, "/libreria/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(DELETE, "/libreria/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().anyRequest().authenticated();
+        //NON AUTENTICATO - registrazione passeggero e info tabelloni
+        http.authorizeRequests().antMatchers(POST,"/agencymng/passengers/newregistration").permitAll();
+        http.authorizeRequests().antMatchers(GET,"/utils/tabellone/**").permitAll();
+
+        //PERMESSI ADMIN
+        http.authorizeRequests().antMatchers( "/api/utenti/**", "/api/roles/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers( "/agencymng/passengers/listall","/flights/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(GET, "/agencymng/passengers/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(PUT, "/agencymng/passengers/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(DELETE, "/agencymng/passengers/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(GET, "/agencymng/bookings/listall").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(PUT, "/agencymng/bookings/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(DELETE, "/agencymng/bookings/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(PUT, "/agencymng/bookings/searchbydate").hasAnyAuthority("ROLE_ADMIN");
+
+        //TODO fare check su questa, eventualmente decommentare, dovrebbe bastare l'authenticated sotto
+        //http.authorizeRequests().antMatchers(GET, "/agencymng/bookings/**").hasAnyAuthority("ROLE_USER");
+        //http.authorizeRequests().antMatchers(GET, "/agencymng/passengers/**").hasAnyAuthority("ROLE_USER");
+        //POST dovrebbero potera fare tutti gli autenticati
+
+        http.authorizeRequests().anyRequest().authenticated(); //verificare poi accesso per utenti se non lo specifico
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+    }
+
+    @Bean
+    public FilterRegistrationBean<CustomSpecificUserAuthorizationFilter> authorizationCustomFilter() {
+        FilterRegistrationBean<CustomSpecificUserAuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(new CustomSpecificUserAuthorizationFilter(passengerRepository,bookingRepository));
+
+        registrationBean.addUrlPatterns("/agencymng//bookings/personal/**");
+
+        return registrationBean;
 
     }
 

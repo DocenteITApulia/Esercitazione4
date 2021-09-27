@@ -95,4 +95,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.repositoryUtente.deleteAll();
         this.roleRepository.deleteAll();
     }
+
+    @Override
+    public void deleteAll() {
+        this.repositoryUtente.deleteAll();
+    }
 }
