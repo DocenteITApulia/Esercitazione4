@@ -107,6 +107,7 @@ public class UtilService {
         log.info("Voli caricati");
 
         /****Prenotazioni*****/
+        //NOTA BENE: dato che agiamo direttamente sulle repository, la logica del conteggio prenotati sui voli non va!
         Prenotazione pren1 = new Prenotazione(9000,"AZ1234","Bari","Roma",temp,
                 LocalTime.of(6,50),LocalTime.of(7,55),"Arnold","Schwarzenegger",
                 "http://localhost:8080/agencymng/bookings/personal/9000",

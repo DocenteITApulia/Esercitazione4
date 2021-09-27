@@ -78,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         registrationBean.setFilter(new CustomSpecificUserAuthorizationFilter(passengerRepository,bookingRepository));
 
-        registrationBean.addUrlPatterns("/agencymng//bookings/personal/**");
+        registrationBean.addUrlPatterns("/agencymng/bookings/personal/*");
 
         return registrationBean;
 
