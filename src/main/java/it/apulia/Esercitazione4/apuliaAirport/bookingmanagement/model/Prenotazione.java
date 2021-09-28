@@ -21,9 +21,9 @@ public class Prenotazione {
     String flightId;
     String airportDep;
     String airportArr;
-    LocalDate depDate;
-    LocalTime depTime;
-    LocalTime arrTime;
+    String depDate;
+    String depTime;
+    String arrTime;
     String passName;
     String passLastName;
     String selfLink;

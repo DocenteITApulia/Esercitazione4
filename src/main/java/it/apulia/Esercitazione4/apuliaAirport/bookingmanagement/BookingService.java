@@ -10,6 +10,7 @@ public interface BookingService {
     Prenotazione getPrenotazioneById(Integer bookingId);
     List<Prenotazione> getPrenotazioniByDatiUtente(String nome, String cognome);
     List<Prenotazione> getPrenotazioniByDate(String data);
+    List<Prenotazione> getPrenotazioniByEmail(String email);
 
     Prenotazione addPrenotazione(PrenotazioneDTO prenotazioneDTO);
     Prenotazione updatePrenotazione(Prenotazione prenotazione);

@@ -84,21 +84,23 @@ public class UtilService {
         log.info("Passeggeri caricati");
 
         /****VOLI*****/
-        String tempdate = "01/10/2021";
+        String temp = "01-10-2021";
+        /*
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate temp = LocalDate.parse(tempdate,formatter);
-
+*/
         Volo flight1 = new Volo("AZ1234","Alitalia","Bari","Roma","http://localhost:8080/flights/AZ1234",
-                200,temp,LocalTime.of(6,50),LocalTime.of(7,55));
+                200,temp,"06:50:00","07:55:00");
         Volo flight2 = new Volo("CX5678","Volotea","Napoli","Bolzano","http://localhost:8080/flights/CX5678",
-                170,temp,LocalTime.of(9,30),LocalTime.of(11,30));
+                170,temp,"09:30:00","11:30:00");
         Volo flight3 = new Volo("AZ1231","Alitalia","Roma","Palermo","http://localhost:8080/flights/AZ1231",
-                200,temp,LocalTime.of(11,50),LocalTime.of(13,25));
+                200,temp,"11:50:00","13:25:00");
         Volo flight4 = new Volo("DQ3421","Ryanair","Trapani","Roma","http://localhost:8080/flights/DQ3421",
-                230,temp,LocalTime.of(18,50),LocalTime.of(21,0));
+                230,temp,"18:50:00","21:00:00");
         Volo flight5 = new Volo("TR6754","BlueAir","Messina","Treviso",
                 "http://localhost:8080/flights/TR6754", 150,
-                LocalDate.of(2021,6,24),LocalTime.of(18,50),LocalTime.of(22,0));
+                "24-06-2021","18:50:00","22:00:00");
 
         flightRepository.saveAll(
                 List.of(flight1,flight2,flight3,flight4,flight5)
@@ -109,27 +111,27 @@ public class UtilService {
         /****Prenotazioni*****/
         //NOTA BENE: dato che agiamo direttamente sulle repository, la logica del conteggio prenotati sui voli non va!
         Prenotazione pren1 = new Prenotazione(9000,"AZ1234","Bari","Roma",temp,
-                LocalTime.of(6,50),LocalTime.of(7,55),"Arnold","Schwarzenegger",
+                "06:50:00","07:55:00","Arnold","Schwarzenegger",
                 "http://localhost:8080/agencymng/bookings/personal/9000",
                 LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG,Luggage.BAGAGLIO_23KG));
 
         Prenotazione pren2 = new Prenotazione(9001,"AZ1234","Bari","Roma",temp,
-                LocalTime.of(6,50),LocalTime.of(7,55),"John","Travolta",
+                "06:50:00","07:55:00","John","Travolta",
                 "http://localhost:8080/agencymng/bookings/personal/9001",
                 LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
 
         Prenotazione pren3 = new Prenotazione(9002,"AZ1234","Bari","Roma",temp,
-                LocalTime.of(6,50),LocalTime.of(7,55),"Jim","Carrey",
+                "06:50:00","07:55:00","Jim","Carrey",
                 "http://localhost:8080/agencymng/bookings/personal/9002",
                 LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC));
 
         Prenotazione pren4 = new Prenotazione(9003,"DQ3421","Trapani","Roma",temp,
-                LocalTime.of(18,50),LocalTime.of(21,0),"Jim","Carrey",
+                "18:50:00","21:00:00","Jim","Carrey",
                 "http://localhost:8080/agencymng/bookings/personal/9003",
                 LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
 
         Prenotazione pren5 = new Prenotazione(9004,"TR6754","Messina","Treviso",
-                LocalDate.of(2021,6,24),LocalTime.of(18,50),LocalTime.of(22,0),
+                "24-06-2021","18:50:00","22:00:00",
                 "Jim","Carrey","http://localhost:8080/agencymng/bookings/personal/9004",
                 LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
 

@@ -43,17 +43,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        customAuthenticationFilter.setFilterProcessesUrl("/accessManager/login");
         http.csrf().disable(); //disabilita il cross site request forgery
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        //http.authorizeRequests().anyRequest().permitAll(); //permette a tutti di accedere
-        http.authorizeRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll();
+        //manca nell'implementazione il ruolo del super admin
+        //http.authorizeRequests().anyRequest().hasAnyAuthority("ROLE_SUPER_ADMIN"); //permette al super admin di fare qualunque operazione
+        http.authorizeRequests().antMatchers("/accessManager/login/**", "/accessManager/token/refresh/**").permitAll();
         //NON AUTENTICATO - registrazione passeggero e info tabelloni
         http.authorizeRequests().antMatchers(POST,"/agencymng/passengers/newregistration").permitAll();
         http.authorizeRequests().antMatchers(GET,"/utils/tabellone/**").permitAll();
 
         //PERMESSI ADMIN
-        http.authorizeRequests().antMatchers( "/api/utenti/**", "/api/roles/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers( "/accessManager/utenti/**", "/accessManager/roles/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers( "/agencymng/passengers/listall","/flights/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers(GET, "/agencymng/passengers/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers(PUT, "/agencymng/passengers/**").hasAnyAuthority("ROLE_ADMIN");

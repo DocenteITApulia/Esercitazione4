@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
@@ -24,8 +25,10 @@ public class VoloOggi {
         this.vettore = volo.getVettore();
         this.airportDep = volo.getAirportDep();
         this.airportArr = volo.getAirportArr();
-        this.depDate = volo.getDepDate();
-        this.depTime = volo.getDepTime();
-        this.arrTime = volo.getArrTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.depDate = LocalDate.parse(volo.getDepDate(),formatter);
+        DateTimeFormatter formattertime = DateTimeFormatter.ofPattern("HH:mm:ss");
+        this.depTime = LocalTime.parse(volo.getDepTime(),formattertime);
+        this.arrTime = LocalTime.parse(volo.getArrTime(),formattertime);
     }
 }

@@ -11,5 +11,6 @@ import java.util.List;
 public interface BookingRepository extends MongoRepository<Prenotazione,Integer> {
     List<Prenotazione> findByFlightId(String flightId);
     List<Prenotazione> findByPassLastNameAndPassName(String passLastName, String passName);
-    List<Prenotazione> findByDepDate(LocalDate depDate);
+    //List<Prenotazione> findByDepDate(LocalDate depDate);
+    List<Prenotazione> findByDepDate(String depDate);
 }

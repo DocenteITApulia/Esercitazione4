@@ -12,8 +12,8 @@ import java.util.List;
 public interface FlightRepository extends MongoRepository<Volo, String> {
 
     List<Volo> findByVettore (String vettore); //ricerca per compagnia
-    List<Volo> findByDepDateOrderByDepTime(LocalDate depDate); //TODO verificare funzionamento, creata su suggerimento
-    List<Volo> findByDepDateOrderByArrTime(LocalDate depDate);
-    @Query("{'depDate': {$gt : ?0, $lt :?1 }}")
-    List<Volo> findByDepDateAfterAndDepDateBefore(LocalDate min, LocalDate max); //TODO verificare
+
+    List<Volo> findByDepDate(String depDate);
+    List<Volo> findByDepDateAndAirportDep(String depDate, String airportDep);
+    List<Volo> findByDepDateAndAirportArr(String depDate, String airportArr);
 }
