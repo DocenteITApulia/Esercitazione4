@@ -29,4 +29,16 @@ public class UtilController {
     public ResponseEntity<Tabellone> getTabelloneArr(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") String dateArr){
         return ResponseEntity.ok().body(flightService.getFlightsInfoArr(dateArr));
     }
+
+    @GetMapping("/tabellone/partenzebycity")
+    public ResponseEntity<Tabellone> getTabelloneDepbycity(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") String dateDep,
+    @RequestParam String city){
+        return ResponseEntity.ok().body(flightService.getFlightsByCityDep(dateDep,city));
+    }
+
+    @GetMapping("/tabellone/arrivibycity")
+    public ResponseEntity<Tabellone> getTabelloneArrbycity(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") String dateArr,
+                                                           @RequestParam String city){
+        return ResponseEntity.ok().body(flightService.getFlightsByCityArr(dateArr,city));
+    }
 }
