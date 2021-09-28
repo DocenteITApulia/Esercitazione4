@@ -25,9 +25,9 @@ public class VoloOggi {
         this.vettore = volo.getVettore();
         this.airportDep = volo.getAirportDep();
         this.airportArr = volo.getAirportArr();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         this.depDate = LocalDate.parse(volo.getDepDate(),formatter);
-        DateTimeFormatter formattertime = DateTimeFormatter.ofPattern("HH:mm");
+        DateTimeFormatter formattertime = DateTimeFormatter.ofPattern("HH:mm:ss");
         this.depTime = LocalTime.parse(volo.getDepTime(),formattertime);
         this.arrTime = LocalTime.parse(volo.getArrTime(),formattertime);
     }

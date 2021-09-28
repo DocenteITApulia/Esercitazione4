@@ -84,7 +84,7 @@ public class UtilService {
         log.info("Passeggeri caricati");
 
         /****VOLI*****/
-        String temp = "01/10/2021";
+        String temp = "01-10-2021";
         /*
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -100,7 +100,7 @@ public class UtilService {
                 230,temp,"18:50:00","21:00:00");
         Volo flight5 = new Volo("TR6754","BlueAir","Messina","Treviso",
                 "http://localhost:8080/flights/TR6754", 150,
-                "24/06/2021","18:50:00","22:00:00");
+                "24-06-2021","18:50:00","22:00:00");
 
         flightRepository.saveAll(
                 List.of(flight1,flight2,flight3,flight4,flight5)
@@ -131,7 +131,7 @@ public class UtilService {
                 LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
 
         Prenotazione pren5 = new Prenotazione(9004,"TR6754","Messina","Treviso",
-                "24/06/2021","18:50:00","22:00:00",
+                "24-06-2021","18:50:00","22:00:00",
                 "Jim","Carrey","http://localhost:8080/agencymng/bookings/personal/9004",
                 LocalDateTime.now(),List.of(Luggage.BAGAGLIO_BASIC, Luggage.BAGAGLIO_8KG));
 

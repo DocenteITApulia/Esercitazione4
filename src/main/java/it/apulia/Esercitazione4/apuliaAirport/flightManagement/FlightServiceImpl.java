@@ -79,14 +79,9 @@ public class FlightServiceImpl implements FlightService{
 
     @Override
     public Tabellone getFlightsInfoDep(String todaydate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate datelocal = LocalDate.parse(todaydate,formatter);
-        System.out.println("Test print date tabellone"+ datelocal.toString());
 
-        List<Volo> templist = flightRepository.findByDepDate(datelocal.toString());
-        //TODO remove, just for test
+        List<Volo> templist = flightRepository.findByDepDate(todaydate);
 
-        //templist.forEach(volo -> System.out.println(volo.toString()));
         Tabellone tabellone = new Tabellone(templist);
         List<VoloOggi> tempvolo = tabellone.getTemp();
         tempvolo.sort(Comparator.comparing(VoloOggi::getDepTime));
@@ -96,11 +91,7 @@ public class FlightServiceImpl implements FlightService{
 
     @Override
     public Tabellone getFlightsInfoArr(String dateArr) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate datelocal = LocalDate.parse(dateArr,formatter);
-        List<Volo> templist = flightRepository.findByDepDate(datelocal.toString());
-        //TODO remove, just for test
-        templist.forEach(volo -> System.out.println(volo.toString()));
+        List<Volo> templist = flightRepository.findByDepDate(dateArr);
         Tabellone tabellone = new Tabellone(templist);
         List<VoloOggi> tempvolo = tabellone.getTemp();
         tempvolo.sort(Comparator.comparing(VoloOggi::getArrTime));
@@ -116,5 +107,27 @@ public class FlightServiceImpl implements FlightService{
             temp.add(passengerRepository.findByNomeAndCognome(prenotazione.getPassName(),prenotazione.getPassLastName()));
         });
         return temp;
+    }
+
+    @Override
+    public Tabellone getFlightsByCityDep(String dateDep, String cityDep) {
+        List<Volo> templist = flightRepository.findByDepDateAndAirportDep(dateDep,cityDep);
+
+        Tabellone tabellone = new Tabellone(templist);
+        List<VoloOggi> tempvolo = tabellone.getTemp();
+        tempvolo.sort(Comparator.comparing(VoloOggi::getDepTime));
+        tabellone.setTemp(tempvolo);
+        return tabellone;
+    }
+
+    @Override
+    public Tabellone getFlightsByCityArr(String dateArr, String cityArr) {
+        List<Volo> templist = flightRepository.findByDepDateAndAirportArr(dateArr,cityArr);
+
+        Tabellone tabellone = new Tabellone(templist);
+        List<VoloOggi> tempvolo = tabellone.getTemp();
+        tempvolo.sort(Comparator.comparing(VoloOggi::getArrTime));
+        tabellone.setTemp(tempvolo);
+        return tabellone;
     }
 }

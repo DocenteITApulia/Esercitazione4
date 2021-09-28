@@ -17,4 +17,6 @@ public interface FlightRepository extends MongoRepository<Volo, String> {
   //  @Query("{'depDate': {$gt : ?0, $lt :?1 }}")
   //  List<Volo> findByDepDateAfterAndDepDateBefore(LocalDate min, LocalDate max); //TODO verificare
     List<Volo> findByDepDate(String depDate);
+    List<Volo> findByDepDateAndAirportDep(String depDate, String airportDep);
+    List<Volo> findByDepDateAndAirportArr(String depDate, String airportArr);
 }
