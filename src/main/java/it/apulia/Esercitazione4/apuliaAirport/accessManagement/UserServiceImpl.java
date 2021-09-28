@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     //in questo caso l'operazione viene eseguita dato il tag @transactional definita all'inizio della classe
     //in casi reali si fa più attenzione sull'utilizzo di questa annotazione, ci saranno altri check da fare
-    //TODO da testare
     @Override
     public void addRoleToUtente(String username, String roleName) {
         Utente utente = this.repositoryUtente.findUtenteByUsername(username);

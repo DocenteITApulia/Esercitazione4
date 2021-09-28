@@ -34,7 +34,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomSpecificUserAuthorizationFilter implements Filter {
 
-    //TODO eventualmente da rimuovere
     private final PassengerRepository passengerRepository;
     private final BookingRepository bookingRepository;
     private final UserService userService;
@@ -54,6 +53,7 @@ public class CustomSpecificUserAuthorizationFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
         String authorizationHeader = req.getHeader(AUTHORIZATION);
+
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ") ) {
             try {
                 String token = authorizationHeader.substring("Bearer ".length());
@@ -61,13 +61,20 @@ public class CustomSpecificUserAuthorizationFilter implements Filter {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
                 String username = decodedJWT.getSubject();
-                //https://stackoverflow.com/questions/16910306/substring-a-url-from-the-end
-                //String urlrequested = req.getPathInfo();
+
                 String urlrequested = req.getRequestURI();
-                //TODO per adesso check solo per accesso alla prenotazione
+
                 Integer idPrenotazione = Integer.valueOf(urlrequested.substring(urlrequested.lastIndexOf("/")+1));
                 Passeggero passeggero = passengerRepository.findById(username).get();
-                Prenotazione prenotazione =bookingRepository.findById(idPrenotazione).get();
+                Prenotazione prenotazione = bookingRepository.findById(idPrenotazione).get();
+                /* //non conviene fare un filtro del genere , in quanto se leggessimo dal body si andrebbe a togliere l'oggetto in post
+                if(req.getMethod().equals("GET")) {
+                    //cioè quando va a fare la get per vedere la propria prenotazione
+
+                }else{
+                    //cioè per la Post, verifichiamo che l'utente stia provando ad aggiungere una prenotazione a nome suo
+                    System.out.println("La richiesta è una "+req.getMethod());
+                }*/
                 Utente utente = userService.getUtente(username);
                 boolean flag = false;
                 for(Role role:utente.getRoles())

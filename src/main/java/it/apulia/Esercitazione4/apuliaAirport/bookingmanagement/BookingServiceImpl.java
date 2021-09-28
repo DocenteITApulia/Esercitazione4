@@ -7,6 +7,7 @@ import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Prenotazio
 import it.apulia.Esercitazione4.apuliaAirport.errors.MyNotFoundException;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.FlightRepository;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Volo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 public class BookingServiceImpl implements BookingService{
@@ -35,7 +37,6 @@ public class BookingServiceImpl implements BookingService{
         this.passengerRepository = passengerRepository;
     }
 
-    //TODO aggiungere i vari check
     @Override
     public List<Prenotazione> getAllPrenotazioni() {
         return bookingRepository.findAll();
@@ -43,12 +44,26 @@ public class BookingServiceImpl implements BookingService{
 
     @Override
     public Prenotazione getPrenotazioneById(Integer bookingId) {
-        return bookingRepository.findById(bookingId).get();
+        if(bookingRepository.existsById(bookingId))
+            return bookingRepository.findById(bookingId).get();
+        else
+            throw new MyNotFoundException("La prenotazione con l'id indicato non esiste");
     }
 
     @Override
     public List<Prenotazione> getPrenotazioniByDatiUtente(String nome, String cognome) {
         return bookingRepository.findByPassLastNameAndPassName(cognome,nome);
+    }
+
+    @Override
+    public List<Prenotazione> getPrenotazioniByEmail(String email) {
+        if(passengerRepository.existsById(email))
+        {
+            Passeggero passeggero = passengerRepository.findById(email).get();
+            return getPrenotazioniByDatiUtente(passeggero.getNome(), passeggero.getCognome());
+        }
+        else
+            throw new MyNotFoundException("L'utente con l'email da te indicata non è presente all'interno del db");
     }
 
     @Override
@@ -68,6 +83,8 @@ public class BookingServiceImpl implements BookingService{
             Volo temp = flightRepository.findById(prenotazioneDTO.getFlightId()).get();
             temp.setBookedpass(temp.getBookedpass()+1); //stiamo considerando 1 prenotazione = 1 passeggero, azione da spostare al buon fine
             //qui si potrebbe inserire un controllo sulla capacità, ma per adesso evitiamo
+            //per adesso si possono aggiungere prenotazioni per altri
+            if(passengerRepository.existsById(prenotazioneDTO.getEmail())){
             Passeggero tempPsg = passengerRepository.findById(prenotazioneDTO.getEmail()).get();
             counter++;
             URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -77,6 +94,8 @@ public class BookingServiceImpl implements BookingService{
                     tempPsg.getCognome(), uri.toString(), LocalDateTime.now(),prenotazioneDTO.getLuggageList());
             bookingRepository.save(prenotazione);
             return prenotazione;
+            }else
+                throw new MyNotFoundException("Passeggero indicato nella prenotazione non trovato");
         }
         throw new MyNotFoundException("Volo inserito per la prenotazione non trovato");
     }
@@ -92,7 +111,10 @@ public class BookingServiceImpl implements BookingService{
 
     @Override
     public void deletePrenotazione(Integer bookingId) {
-        bookingRepository.deleteById(bookingId);
+        if(!bookingRepository.existsById(bookingId))
+            log.warn("è stato effettuato un tentativo di eliminazione di un utente non presente all'interno del db");
+        else
+            bookingRepository.deleteById(bookingId);
     }
 
     @Override

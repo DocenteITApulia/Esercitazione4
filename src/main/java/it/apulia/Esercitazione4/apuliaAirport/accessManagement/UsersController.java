@@ -29,9 +29,8 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
-//TODO sistemare i path
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/accessManager")
 @RequiredArgsConstructor
 public class UsersController {
     private final UserService serviceUtente;
@@ -44,9 +43,7 @@ public class UsersController {
     @PostMapping("/utenti")
     public ResponseEntity<Utente> saveUtente(@RequestBody Utente utente)
     {
-        //TODO verificare uri sia corretto, si dovrebbe fare in modo che l'uri indichi il path preciso della risorsa creata
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/utenti/"+utente.getUsername()).toUriString());
-        System.out.println(uri.toString()); //TODO da rimuovere, per test
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/accessManager/utenti/"+utente.getUsername()).toUriString());
         return ResponseEntity.created(uri).body(this.serviceUtente.saveUtente(utente));
     }
 
@@ -63,7 +60,7 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
-    //TODO valutare se passare qualcosa ad un servizio per migliorare la leggibilità
+
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);

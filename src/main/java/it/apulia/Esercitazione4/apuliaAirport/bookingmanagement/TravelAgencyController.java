@@ -40,9 +40,18 @@ class TravelAgencyController {
         return ResponseEntity.created(URI.create(passeggero.getSelf())).body(passeggero);
     }
 
+    //Al momento solo l'admin può vedere questo path
+    @GetMapping("/passengers/{emailPass}/prenotazioni")
+    public ResponseEntity<?> getPrenotazioniByEmail(@PathVariable String emailPass){
+        List<Prenotazione> temp = bookingService.getPrenotazioniByEmail(emailPass);
+        if(temp.isEmpty())
+            return ResponseEntity.ok().body("L'utente da te inserito non ha effettuato alcuna prenotazione");
+        else
+            return ResponseEntity.ok().body(temp);
+    }
+
     @PutMapping("/passengers/{emailPass}")
     public ResponseEntity updatePasseggero(@RequestBody Passeggero passeggero, @PathVariable String emailPass){
-        //TODO service di controllo su esistenza passeggero?
         passengerService.updatePasseggero(passeggero);
         return ResponseEntity.ok().build();
     }
@@ -59,13 +68,13 @@ class TravelAgencyController {
         return ResponseEntity.ok().body(bookingService.getAllPrenotazioni());
     }
 
-    //TODO valutare creazione filtro su specifiche richieste
-    @GetMapping("/bookings/personal/{numPrenotazione}") //TODO verificare identità di chi fa la richiesta, consiglio: sdoppiare richiesta
+
+    @GetMapping("/bookings/personal/{numPrenotazione}")
     public ResponseEntity<Prenotazione> getPrenotazione(@PathVariable Integer numPrenotazione){
         return ResponseEntity.ok().body(bookingService.getPrenotazioneById(numPrenotazione));
     }
 
-    @PostMapping("/bookings") //TODO verificare discorso path
+    @PostMapping("/bookings")
     public ResponseEntity<Prenotazione> addPrenotazione(@RequestBody PrenotazioneDTO prenotazioneDTO){
         Prenotazione temp = bookingService.addPrenotazione(prenotazioneDTO);
         return ResponseEntity.created(URI.create(temp.getSelfLink())).body(temp);
