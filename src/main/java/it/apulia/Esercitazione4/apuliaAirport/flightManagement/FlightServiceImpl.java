@@ -7,14 +7,17 @@ import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Prenotazio
 import it.apulia.Esercitazione4.apuliaAirport.errors.MyNotFoundException;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Tabellone;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Volo;
+import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.VoloOggi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -51,7 +54,8 @@ public class FlightServiceImpl implements FlightService{
         return flightRepository.findAll();
     }
 
-    //TODO da testare
+    /*
+
     @Override
     public List<Volo> listAllFlights(String min, String max) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -59,7 +63,7 @@ public class FlightServiceImpl implements FlightService{
         LocalDate maxdate = LocalDate.parse(max,formatter);
         return this.flightRepository.findByDepDateAfterAndDepDateBefore(mindate,maxdate);
     }
-
+*/
     @Override
     public void updateVolo(Volo volo) {
         if(!this.flightRepository.existsById(volo.getFlightId()))
@@ -77,10 +81,16 @@ public class FlightServiceImpl implements FlightService{
     public Tabellone getFlightsInfoDep(String todaydate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate datelocal = LocalDate.parse(todaydate,formatter);
-        List<Volo> templist = flightRepository.findByDepDateOrderByDepTime(datelocal);
+        System.out.println("Test print date tabellone"+ datelocal.toString());
+
+        List<Volo> templist = flightRepository.findByDepDate(datelocal.toString());
         //TODO remove, just for test
-        templist.forEach(volo -> System.out.println(volo.toString()));
+
+        //templist.forEach(volo -> System.out.println(volo.toString()));
         Tabellone tabellone = new Tabellone(templist);
+        List<VoloOggi> tempvolo = tabellone.getTemp();
+        tempvolo.sort(Comparator.comparing(VoloOggi::getDepTime));
+        tabellone.setTemp(tempvolo);
         return tabellone;
     }
 
@@ -88,10 +98,13 @@ public class FlightServiceImpl implements FlightService{
     public Tabellone getFlightsInfoArr(String dateArr) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate datelocal = LocalDate.parse(dateArr,formatter);
-        List<Volo> templist = flightRepository.findByDepDateOrderByArrTime(datelocal);
+        List<Volo> templist = flightRepository.findByDepDate(datelocal.toString());
         //TODO remove, just for test
         templist.forEach(volo -> System.out.println(volo.toString()));
         Tabellone tabellone = new Tabellone(templist);
+        List<VoloOggi> tempvolo = tabellone.getTemp();
+        tempvolo.sort(Comparator.comparing(VoloOggi::getArrTime));
+        tabellone.setTemp(tempvolo);
         return tabellone;
     }
 

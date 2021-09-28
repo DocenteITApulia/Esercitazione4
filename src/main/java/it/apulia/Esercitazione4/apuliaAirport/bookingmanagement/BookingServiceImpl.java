@@ -55,7 +55,7 @@ public class BookingServiceImpl implements BookingService{
     public List<Prenotazione> getPrenotazioniByDate(String data) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate datelocal = LocalDate.parse(data,formatter);
-        return bookingRepository.findByDepDate(datelocal);
+        return bookingRepository.findByDepDate(data);
     }
 
     @Override

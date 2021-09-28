@@ -25,11 +25,11 @@ public class Volo { //più o meno realisticamente avrebbe avuto senso avere una 
     String selfLink;
     Integer capacity;
     Integer bookedpass = 0;
-    LocalDate depDate;
-    LocalTime depTime;
-    LocalTime arrTime;
+    String depDate;
+    String depTime;
+    String arrTime;
 
-    public Volo(String flightId, String vettore, String airportDep, String airportArr, String selfLink, Integer capacity, LocalDate depDate, LocalTime depTime, LocalTime arrTime) {
+    public Volo(String flightId, String vettore, String airportDep, String airportArr, String selfLink, Integer capacity, String depDate, String depTime, String arrTime) {
         this.flightId = flightId;
         this.vettore = vettore;
         this.airportDep = airportDep;
