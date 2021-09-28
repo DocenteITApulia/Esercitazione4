@@ -38,7 +38,7 @@ public class FlightServiceImpl implements FlightService{
     public Volo addVolo(Volo volo) {
         if(!flightRepository.existsById(volo.getFlightId())) {
             URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/" + volo.getFlightId()).toUriString());
+                    .path("/flights/" + volo.getFlightId()).toUriString());
             volo.setSelfLink(uri.toString());
             return this.flightRepository.save(volo);
         }else
@@ -103,9 +103,7 @@ public class FlightServiceImpl implements FlightService{
             throw new MyNotFoundException("Il volo avente l'id da te inserito non esiste");
         List<Prenotazione> listaPrenotazioni = bookingRepository.findByFlightId(flightId);
         List<Passeggero> temp = new ArrayList<Passeggero>();
-        listaPrenotazioni.forEach(prenotazione -> {
-            temp.add(passengerRepository.findByNomeAndCognome(prenotazione.getPassName(),prenotazione.getPassLastName()));
-        });
+        listaPrenotazioni.forEach(prenotazione -> temp.add(passengerRepository.findByNomeAndCognome(prenotazione.getPassName(),prenotazione.getPassLastName())));
         return temp;
     }
 

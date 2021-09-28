@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/accessManager/login");
         http.csrf().disable(); //disabilita il cross site request forgery
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().anyRequest().hasAnyAuthority("ROLE_SUPER_ADMIN"); //permette al super admin di fare qualunque operazione
+        //manca nell'implementazione il ruolo del super admin
+        //http.authorizeRequests().anyRequest().hasAnyAuthority("ROLE_SUPER_ADMIN"); //permette al super admin di fare qualunque operazione
         http.authorizeRequests().antMatchers("/accessManager/login/**", "/accessManager/token/refresh/**").permitAll();
         //NON AUTENTICATO - registrazione passeggero e info tabelloni
         http.authorizeRequests().antMatchers(POST,"/agencymng/passengers/newregistration").permitAll();

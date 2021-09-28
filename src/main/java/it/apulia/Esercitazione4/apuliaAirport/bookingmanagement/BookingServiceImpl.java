@@ -4,6 +4,7 @@ import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Luggage;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Passeggero;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.Prenotazione;
 import it.apulia.Esercitazione4.apuliaAirport.bookingmanagement.model.PrenotazioneDTO;
+import it.apulia.Esercitazione4.apuliaAirport.errors.MyNotAcceptableException;
 import it.apulia.Esercitazione4.apuliaAirport.errors.MyNotFoundException;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.FlightRepository;
 import it.apulia.Esercitazione4.apuliaAirport.flightManagement.model.Volo;
@@ -81,7 +82,12 @@ public class BookingServiceImpl implements BookingService{
                 prenotazioneDTO.getLuggageList().add(Luggage.BAGAGLIO_BASIC); //se non lo contiene, mettiglielo
             }
             Volo temp = flightRepository.findById(prenotazioneDTO.getFlightId()).get();
+            //test su capienza
+            if(temp.getBookedpass()>=temp.getCapacity()){
+                throw new MyNotAcceptableException("Volo in overbooking, impossibile accettare prenotazione");//non testato, ma dovrebbe funzionare
+            }
             temp.setBookedpass(temp.getBookedpass()+1); //stiamo considerando 1 prenotazione = 1 passeggero, azione da spostare al buon fine
+            flightRepository.save(temp);
             //qui si potrebbe inserire un controllo sulla capacità, ma per adesso evitiamo
             //per adesso si possono aggiungere prenotazioni per altri
             if(passengerRepository.existsById(prenotazioneDTO.getEmail())){
